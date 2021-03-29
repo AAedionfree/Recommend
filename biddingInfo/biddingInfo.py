@@ -5,6 +5,8 @@ class biddingInfo:
         self.company = info['company']          # 招标/中标公司
         self.keywords = info['keywords']        # 关键词
         self.keywords_len = len(self.keywords)
+        self.filepath = info["path"]
+        self.file_index = str(info["index"])
         # self.condition = info['condition']      # 资格条件
         # self.certificate = info['certificate']  # 证书
 
@@ -19,3 +21,10 @@ class biddingInfo:
         print("项目名: " + self.name)
         print("中标公司: " + self.company)
         print("训练文本: " + self.keywords)
+        print("源文件路径:" + self.filepath)
+        print("所处源文件位置:" + self.file_index)
+        if len(self.keywords) <= 2:
+            print("warning")
+
+    def toList(self):
+        return [self.classes, self.company, self.name, self.keywords, self.filepath, self.file_index]
