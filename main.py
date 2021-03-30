@@ -8,10 +8,12 @@ import re
 import pandas as pd
 import jieba
 
-debug = True
+debug = False
 
 bidingDataPath = "data/bidding/"
-bidingDataFileName = fileIndex.bidingDataFileName[0:20]
+bidingDataFileName = fileIndex.bidingDataFileName[0:100]
+
+stopWord = ["（", "）", "、", "，", ".", "。", "]", "[", "【", "】"]
 
 def Print(string):
     if debug == True:
@@ -24,15 +26,21 @@ def load_data(path):
     while line:
         data.append(line)
         line = f.readline()
+    f.close()
     Print(len(data))
     return data
+
+def deletePartString(string):
+    for stopword in stopWord:
+        string = string.replace(stopword, "")
+    return string
 
 def filter(data):
     json_data = []
     filter_data = []
     pattern = re.compile(r'[^\u4e00-\u9fa5]+')
     for string in data:
-        Print(string)
+        string = deletePartString(string)
         json_start = string.find("{")
         json_end = string.find("}")
         json_string = string[json_start:json_end+1]
@@ -55,15 +63,19 @@ def toBiddingInfo(filter_data, json_data, path):
                 continue
             key_string = ""
             if "关键信息:" in map:
-                key_string = " ".join(jieba.cut(map["关键信息:"].replace(",", "")))
+                key_string = " ".join(jieba.cut(map["关键信息:"].replace(",", ""))).strip()
             if "招标单位:" in map:
                 location = ""
                 for word in jieba.cut(map["招标单位:"]):
                     location = word
-                key_string += " " + location
+                key_string += " " + location.strip()
+            key_string = key_string.strip()
             # classes proj_name company
             filter_arr = filter_string.split("\n")
-            classes = filter_arr[1].replace(r"[^\u4e00-\u9fa5]+", "")
+            if len(filter_arr) <= 3:
+                continue
+            classes = filter_arr[1].replace(r"[^\u4e00-\u9fa5]+", "").strip()
+            location = filter_arr[2].replace(r"[^\u4e00-\u9fa5]+", "").strip()
             project_name = filter_arr[3]
             company = ""
             if classes == "招标公告":
@@ -79,16 +91,23 @@ def toBiddingInfo(filter_data, json_data, path):
             else:
                 Print("ERROR: unknow classes")
 
-            if classes != "" and company != "" and project_name != "":
+            if location == "":
+                location = "null"
+            else:
+                key_string += " " + location
+
+            if classes != "" and company != ""\
+                    and len(key_string.strip().split(" ")) >= 4 and len(project_name) >= 7:
                 info = {}
                 info['class'] = classes
+                info['location'] = location
                 info['name'] = project_name
                 info['company'] = company
                 info['keywords'] = key_string
                 info['path'] = path
                 info['index'] = i
                 bidding = biddingInfo.biddingInfo(info)
-                bidding.print_data()
+                bidding.print_data(debug)
                 biddingInfos.append(bidding)
             else:
                 Print("classes:" + classes)
@@ -99,7 +118,7 @@ def toBiddingInfo(filter_data, json_data, path):
 
 
 if __name__ == '__main__':
-    columns = ["类别", "公司名称", "项目名字", "关键词", "文件路径", "下标位置"]
+    columns = ["类别", "公司名称", "公司位置", "项目名字", "关键词", "文件路径", "下标位置"]
     for i in range(len(bidingDataFileName)):
         path = bidingDataPath + bidingDataFileName[i]
         data = load_data(path)
@@ -111,5 +130,6 @@ if __name__ == '__main__':
             df.to_csv("data.csv", index=False, encoding='utf_8_sig', mode='a')
         else:
             df.to_csv("data.csv", index=False, encoding='utf_8_sig', mode='a', header=False)
+        print(path + " " + "biddingInfos:" + str(len(biddingInfos)))
     Print("\n预处理结束")
-    Print("biddingInfos:" + str(len(biddingInfos)))
+
