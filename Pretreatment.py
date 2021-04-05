@@ -11,7 +11,7 @@ import jieba
 debug = False
 
 bidingDataPath = "data/bidding/"
-bidingDataFileName = fileIndex.bidingDataFileName[0:100]
+bidingDataFileName = fileIndex.bidingDataFileName
 
 stopWord = ["（", "）", "、", "，", ".", "。", "]", "[", "【", "】"]
 
@@ -97,7 +97,7 @@ def toBiddingInfo(filter_data, json_data, path):
                 key_string += " " + location
 
             if classes != "" and company != ""\
-                    and len(key_string.strip().split(" ")) >= 4 and len(project_name) >= 7:
+                    and len(key_string.strip().split(" ")) >= 4 and len(project_name) >= 8:
                 info = {}
                 info['class'] = classes
                 info['location'] = location

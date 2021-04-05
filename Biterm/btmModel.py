@@ -4,19 +4,20 @@ from tqdm import trange
 
 
 class oBTM:
-    """ Biterm Topic Model
-
-        Code and naming is based on this paper http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.402.4032&rep=rep1&type=pdf
-        Thanks to jcapde for providing the code on https://github.com/jcapde/Biterm
-    """
-
-    def __init__(self, num_topics, V, alpha=1., beta=0.01, l=0.5):
-        self.K = num_topics
-        self.V = V
-        self.alpha = np.full(self.K, alpha)
-        self.beta = np.full((len(self.V), self.K), beta)
-        self.l = l
-
+    def __init__(self, num_topics, V, alpha=1., beta=0.01, l=0.5, theta_z_path="", phi_wz_path=""):
+        if theta_z_path != "" and phi_wz_path != "":
+            # load -> predict
+            self.theta_z = np.load(theta_z_path)
+            self.phi_wz = np.load(phi_wz_path)
+            self.K = self.theta_z.shape[0]
+            print(self.K)
+        else:
+            # init -> train -> save
+            self.K = num_topics
+            self.V = V
+            self.alpha = np.full(self.K, alpha)
+            self.beta = np.full((len(self.V), self.K), beta)
+            self.l = l
 
     def _gibbs(self, iterations):
 
@@ -77,6 +78,9 @@ class oBTM:
 
         return P_zd
 
+    def save(self, theta_z_path="theta_z.npy", phi_wz_path="phi_wz.npy"):
+        np.save(theta_z_path, self.theta_z)
+        np.save(phi_wz_path, self.phi_wz)
 
 class sBTM(oBTM):
 
