@@ -5,4 +5,5 @@
 bidding
 company
 data.csv
-save/*
+*.json
+*.npy

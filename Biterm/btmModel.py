@@ -47,8 +47,6 @@ class oBTM:
                 n_wz[b_i[0], Z[i]] += 1
                 n_wz[b_i[1], Z[i]] += 1
                 n_z[Z[i]] += 1
-
-
         return n_z, n_wz
 
     def fit_transform(self, B_d, iterations):
@@ -75,12 +73,13 @@ class oBTM:
                 P_zbi = self.theta_z * self.phi_wz[b[0], :] * self.phi_wz[b[1], :]
                 P_zb[j] = P_zbi / P_zbi.sum()
             P_zd[i] = P_zb.sum(axis=0) / P_zb.sum(axis=0).sum()
-
+        self.P_zd = P_zd
         return P_zd
 
-    def save(self, theta_z_path="theta_z.npy", phi_wz_path="phi_wz.npy"):
+    def save(self, theta_z_path="theta_z.npy", phi_wz_path="phi_wz.npy", P_zd_path="P_zd.npy"):
         np.save(theta_z_path, self.theta_z)
         np.save(phi_wz_path, self.phi_wz)
+        np.save(P_zd_path, self.P_zd)
 
 class sBTM(oBTM):
 

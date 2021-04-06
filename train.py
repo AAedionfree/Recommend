@@ -10,14 +10,13 @@ from Biterm.utility import vec_to_biterms, topic_summuary
 vocabulary_path = "save/vocabulary.json"
 theta_z_path = "save/theta_z.npy"
 phi_wz_path = "save/phi_wz.npy"
+P_zd_path = "save/P_zd.npy"
 
 def loadText(Path="./data.csv"):
     file = pd.read_csv(Path, nrows=100)
     return np.array(file["关键词"])
 
-
-
-if __name__ == '__main__':
+def train():
     texts = loadText()
 
     vec = CountVectorizer()
@@ -45,7 +44,10 @@ if __name__ == '__main__':
     for i in range(len(texts)):
         print("{} (topic: {})".format(texts[i], topics[i].argmax()))
 
-    btm.save(theta_z_path, phi_wz_path)
+    btm.save(theta_z_path, phi_wz_path, P_zd_path)
+
+    return texts
+
 
 
 
