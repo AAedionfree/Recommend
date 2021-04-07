@@ -2,13 +2,11 @@
 ## Src
 Pretreatment.py: rawData => data.csv 
 
-data.csv header:["类别", "公司名称", "公司位置", "项目名字", "关键词", "文件路径", "下标位置"]
-
 train.py: load data.csv tarin biterm topic model and store it as *.npy
 
-predict: testSentence => P(topic|testSentence)
+predict.py: testSentence => P(topic|testSentence)
 
-fermat: P(topic|trainSentences) => construct hnsw index && P(topic|testSentence) => topK similar trainSentence
+fermat.py: $P(topic|trainSentences)$ => construct hnsw index && P(topic|testSentence) => topK similar trainSentence
 
 main.py: all steps
 
