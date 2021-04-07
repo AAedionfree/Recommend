@@ -1,0 +1,25 @@
+Pretreatment.py:61: DeprecationWarning: 'encoding' is ignored and deprecated. It will be removed in Python 3.9
+  map = json.loads(json_string, encoding="GB2312")
+Building prefix dict from the default dictionary ...
+Loading model from cache /tmp/jieba.cache
+Loading model cost 0.661 seconds.
+Prefix dict has been built successfully.
+0/745 data/bidding/t_model_aa biddingInfos:4120
+1/745 data/bidding/t_model_ab biddingInfos:3979
+2/745 data/bidding/t_model_ac biddingInfos:4126
+3/745 data/bidding/t_model_ad biddingInfos:3997
+4/745 data/bidding/t_model_ae biddingInfos:4364
+5/745 data/bidding/t_model_af biddingInfos:4229
+6/745 data/bidding/t_model_ag biddingInfos:4349
+7/745 data/bidding/t_model_ah biddingInfos:3985
+8/745 data/bidding/t_model_ai biddingInfos:4904
+9/745 data/bidding/t_model_aj biddingInfos:5293
+10/745 data/bidding/t_model_ak biddingInfos:5116
+11/745 data/bidding/t_model_al biddingInfos:5618
+12/745 data/bidding/t_model_am biddingInfos:5437
+13/745 data/bidding/t_model_an biddingInfos:5855
+14/745 data/bidding/t_model_ao biddingInfos:5948
+15/745 data/bidding/t_model_ap biddingInfos:5830
+16/745 data/bidding/t_model_aq biddingInfos:6457
+17/745 data/bidding/t_model_ar biddingInfos:6262
+18/745 data/bidding/t_model_as biddingInfos:6165
