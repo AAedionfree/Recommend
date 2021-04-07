@@ -6,7 +6,10 @@ train.py: load data.csv tarin biterm topic model and store it as *.npy
 
 predict.py: testSentence => P(topic|testSentence)
 
-fermat.py: $P(topic|trainSentences)$ => construct hnsw index && P(topic|testSentence) => topK similar trainSentence
+fermat.py:
+
+1.P(topic|trainSentences) => construct hnsw index 
+2.P(topic|testSentence) => topK similar trainSentence
 
 main.py: all steps
 
