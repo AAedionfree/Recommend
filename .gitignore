@@ -7,3 +7,4 @@ company
 data.csv
 *.json
 *.npy
+*.log
