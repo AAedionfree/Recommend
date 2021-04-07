@@ -4,6 +4,8 @@ import pickle
 
 from train import P_zd_path
 
+index_path = "save/hnsw.bin"
+
 class hnswIndex():
     def __init__(self):
         self.data = np.load(P_zd_path)
@@ -42,3 +44,6 @@ class hnswIndex():
         labels, distances = self.p.knn_query(data, k = k)
         print(labels, distances)
         return labels[0], distances[0]
+
+    def save_index(self):
+        self.p.save_index(index_path)

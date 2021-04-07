@@ -7,6 +7,7 @@ def main():
     topic = predict()
     index = hnswIndex()
     index.construction_index()
+    index.save_index()
     labels, distances = index.query(topic, k=2)
     for i in range(len(labels)):
         print(originText[labels[i]])
