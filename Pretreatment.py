@@ -130,6 +130,6 @@ if __name__ == '__main__':
             df.to_csv("data.csv", index=False, encoding='utf_8_sig', mode='a')
         else:
             df.to_csv("data.csv", index=False, encoding='utf_8_sig', mode='a', header=False)
-        print(path + " " + "biddingInfos:" + str(len(biddingInfos)))
+        print(str(i) + "/" + str(len(bidingDataFileName)) + " " + path + " " + "biddingInfos:" + str(len(biddingInfos)))
     Print("\n预处理结束")
 
