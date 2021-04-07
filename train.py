@@ -11,6 +11,8 @@ vocabulary_path = "save/vocabulary.json"
 theta_z_path = "save/theta_z.npy"
 phi_wz_path = "save/phi_wz.npy"
 P_zd_path = "save/P_zd.npy"
+num_topics=30
+iterations=200
 
 def loadText(Path="./data.csv"):
     file = pd.read_csv(Path, nrows=100)
@@ -26,11 +28,11 @@ def train():
     vocab = np.array(vec.get_feature_names())
     biterms = vec_to_biterms(X)
 
-    btm = oBTM(num_topics=20, V=vocab)
+    btm = oBTM(num_topics=num_topics, V=vocab)
     print("\n\n Train Online BTM ..")
     for i in range(0, len(biterms), 100):  # prozess chunk of 200 texts
         biterms_chunk = biterms[i:i + 100]
-        btm.fit(biterms_chunk, iterations=50)
+        btm.fit(biterms_chunk, iterations=iterations)
     topics = btm.transform(biterms)
 
     print("\n\n Visualize Topics ..")
