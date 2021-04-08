@@ -15,7 +15,7 @@ num_topics=30
 iterations=200
 
 def loadText(Path="./data.csv"):
-    file = pd.read_csv(Path)
+    file = pd.read_csv(Path, nrows=12500)
     return np.array(file["关键词"])
 
 def train():
