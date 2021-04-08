@@ -21,7 +21,7 @@ def loadText(Path="./data.csv"):
 def train():
     texts = loadText()
 
-    vec = CountVectorizer(min_df=50)
+    vec = CountVectorizer(min_df=80, dtype=np.uint8)
     X = vec.fit_transform(texts).toarray()
     json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
 
