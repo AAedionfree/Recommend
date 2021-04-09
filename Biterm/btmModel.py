@@ -72,6 +72,11 @@ class oBTM:
             for j, b in enumerate(d):
                 P_zbi = self.theta_z * self.phi_wz[b[0], :] * self.phi_wz[b[1], :]
                 P_zb[j] = P_zbi / P_zbi.sum()
+            if P_zb.sum(axis=0).sum() == 0:
+                print("index " + str(i))
+                print(self.theta_z)
+                print(self.phi_wz[b[0], :])
+                print(self.phi_wz[b[1], :])
             P_zd[i] = P_zb.sum(axis=0) / P_zb.sum(axis=0).sum()
         self.P_zd = P_zd
         return P_zd
