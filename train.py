@@ -23,6 +23,7 @@ def train():
 
     vec = CountVectorizer(min_df=80, dtype=np.uint8)
     X = vec.fit_transform(texts).toarray()
+    print("X[124026].sum() " + str(X[124026]))
     json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
 
     vocab = np.array(vec.get_feature_names())
