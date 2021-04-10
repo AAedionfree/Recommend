@@ -74,6 +74,7 @@ class oBTM:
                 P_zb[j] = P_zbi / P_zbi.sum()
             if P_zb.sum(axis=0).sum() == 0:
                 print("index " + str(i))
+                print(P_zb.sum(axis=0))
                 print(self.theta_z)
                 print(self.phi_wz[b[0], :])
                 print(self.phi_wz[b[1], :])
