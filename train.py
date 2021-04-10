@@ -11,23 +11,31 @@ vocabulary_path = "save/vocabulary.json"
 theta_z_path = "save/theta_z.npy"
 phi_wz_path = "save/phi_wz.npy"
 P_zd_path = "save/P_zd.npy"
-num_topics=30
-iterations=200
+num_topics=20
+iterations=150
 
 def loadText(Path="./data.csv"):
-    file = pd.read_csv(Path, nrows=12500)
+    file = pd.read_csv(Path, nrows=90000)
     return np.array(file["关键词"])
 
 def train():
     texts = loadText()
-
-    vec = CountVectorizer(min_df=80, dtype=np.uint8)
+    min = 9999
+    index = -1
+    for i in range(len(texts)):
+        text = texts[i]
+        if min > len(text.split(" ")):
+            min = len(text.split(" "))
+            index = i
+    print("min is " + str(min))
+    vec = CountVectorizer(dtype=np.uint8, token_pattern='\w+')
     X = vec.fit_transform(texts).toarray()
     json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
 
     vocab = np.array(vec.get_feature_names())
     biterms = vec_to_biterms(X)
 
+    del X
     btm = oBTM(num_topics=num_topics, V=vocab)
     print("\n\n Train Online BTM ..")
     for i in range(0, len(biterms), 100):  # prozess chunk of 200 texts
