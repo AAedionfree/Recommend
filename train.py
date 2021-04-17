@@ -15,7 +15,7 @@ num_topics=20
 iterations=150
 
 def loadText(Path="./data.csv"):
-    file = pd.read_csv(Path, nrows=90000)
+    file = pd.read_csv(Path, nrows=200000)
     return np.array(file["关键词"])
 
 def train():
@@ -28,15 +28,15 @@ def train():
             min = len(text.split(" "))
             index = i
     print("min is " + str(min))
-    vec = CountVectorizer(dtype=np.uint8, token_pattern='\w+')
+    vec = CountVectorizer(dtype=np.int16, token_pattern='\w+')
     X = vec.fit_transform(texts).toarray()
-    json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
+    # json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
 
     vocab = np.array(vec.get_feature_names())
     biterms = vec_to_biterms(X)
 
-    del X
     btm = oBTM(num_topics=num_topics, V=vocab)
+    print(len(vocab))
     print("\n\n Train Online BTM ..")
     for i in range(0, len(biterms), 100):  # prozess chunk of 200 texts
         biterms_chunk = biterms[i:i + 100]
