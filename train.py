@@ -3,6 +3,9 @@ import json
 import pandas as pd
 import numpy as np
 import pyLDAvis
+import gensim
+from gensim.models import Doc2Vec
+
 from Biterm.btmModel import oBTM
 from sklearn.feature_extraction.text import CountVectorizer
 from Biterm.utility import vec_to_biterms, topic_summuary
@@ -15,28 +18,44 @@ num_topics=20
 iterations=150
 
 def loadText(Path="./data.csv"):
-    file = pd.read_csv(Path, nrows=90000)
+    file = pd.read_csv(Path, nrows=100000)
     return np.array(file["关键词"])
 
-def train():
+def doc2vecLoadTrain():
     texts = loadText()
-    min = 9999
-    index = -1
-    for i in range(len(texts)):
-        text = texts[i]
-        if min > len(text.split(" ")):
-            min = len(text.split(" "))
-            index = i
-    print("min is " + str(min))
+    X_train = []
+    TaggedDocument = gensim.models.doc2vec.TaggedDocument
+    for i, item in enumerate(texts):
+        word_list = item.split(' ')
+        for j, word in enumerate(word_list):
+            word_list[j] = word.strip()
+        document = TaggedDocument(word_list, tags=[i])
+        X_train.append(document)
+    return X_train
+
+def doc2vecTrain():
+    X_train = doc2vecLoadTrain()
+    doc2vec=Doc2Vec(X_train, min_count=10, alpha=0.001, window=3)
+    doc2vec.train(X_train, total_examples=doc2vec.corpus_count, epochs=100)
+    doc2vec.save("save/doc2vec.bin")
+    goal = "微机 安装 交换机 研究所 北京市"
+    # doc2vec = Doc2Vec.load("save/doc2vec.bin")
+    text = goal.split(' ')
+    infer = doc2vec.infer_vector(doc_words=text, steps=500, alpha=0.005)
+    most_similar = doc2vec.docvecs.most_similar([infer], topn=10)
+    for cnt,sen in most_similar:
+        print(cnt, sen)
+        print(X_train[cnt])
+
+def btmTrain():
+    texts = loadText()
     vec = CountVectorizer(dtype=np.uint8, token_pattern='\w+')
     X = vec.fit_transform(texts).toarray()
-    print("X[124026].sum() " + str(X[124026]))
     json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
-
+    print("vocabulary_ size is " + str(len(vec.vocabulary_)))
     vocab = np.array(vec.get_feature_names())
     biterms = vec_to_biterms(X)
 
-    del X
     btm = oBTM(num_topics=num_topics, V=vocab)
     print("\n\n Train Online BTM ..")
     for i in range(0, len(biterms), 100):  # prozess chunk of 200 texts
@@ -55,12 +74,12 @@ def train():
     for i in range(len(texts)):
         print("{} (topic: {})".format(texts[i], topics[i].argmax()))
 
-    btm.save(theta_z_path, phi_wz_path, P_zd_path)
+    # btm.save(theta_z_path, phi_wz_path, P_zd_path)
 
     return texts
 
 if __name__=="__main__":
-    train()
+    doc2vecTrain()
 
 
 
