@@ -28,7 +28,7 @@ class hnswIndex():
         p.add_items(self.data, self.data_labels)
 
         # Controlling the recall by setting ef:
-        p.set_ef(50) # ef should always be > k
+        p.set_ef(150000) # ef should always be > k
 
         self.p = p
 

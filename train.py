@@ -14,6 +14,7 @@ vocabulary_path = "save/vocabulary.json"
 theta_z_path = "save/theta_z.npy"
 phi_wz_path = "save/phi_wz.npy"
 P_zd_path = "save/P_zd.npy"
+doc2vec_Path = "save/doc2vec.bin"
 num_topics=20
 iterations=150
 
@@ -37,15 +38,8 @@ def doc2vecTrain():
     X_train = doc2vecLoadTrain()
     doc2vec=Doc2Vec(X_train, min_count=10, alpha=0.001, window=3)
     doc2vec.train(X_train, total_examples=doc2vec.corpus_count, epochs=100)
-    doc2vec.save("save/doc2vec.bin")
-    goal = "微机 安装 交换机 研究所 北京市"
-    # doc2vec = Doc2Vec.load("save/doc2vec.bin")
-    text = goal.split(' ')
-    infer = doc2vec.infer_vector(doc_words=text, steps=500, alpha=0.005)
-    most_similar = doc2vec.docvecs.most_similar([infer], topn=10)
-    for cnt,sen in most_similar:
-        print(cnt, sen)
-        print(X_train[cnt])
+    doc2vec.save(doc2vec_Path)
+
 
 def btmTrain():
     texts = loadText()
