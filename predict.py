@@ -1,3 +1,4 @@
+import os
 import json
 
 import numpy as np
@@ -8,7 +9,13 @@ from gensim.models import Doc2Vec
 
 from train import phi_wz_path, vocabulary_path, theta_z_path
 from train import doc2vec_Path
-from fermat import hnswIndex
+from fermat import hnswIndex, index_path
+
+def path(file_path):
+    current_path = os.path.abspath(__file__)
+    father_path = os.path.abspath(os.path.dirname(current_path) + os.path.sep + ".")
+    config_file_path = os.path.join(father_path, file_path)
+    return config_file_path
 
 
 class doc2vecPredictor():
@@ -16,7 +23,7 @@ class doc2vecPredictor():
         self.model = self.__predict__init()
 
     def __predict__init(self):
-        return Doc2Vec.load(doc2vec_Path)
+        return Doc2Vec.load(path(doc2vec_Path))
 
     def predict(self, testData, k):
         text = testData.split(' ')
@@ -28,14 +35,15 @@ class doc2vecPredictor():
 class btmPredictor():
     def __init__(self):
         self.btm, self.vocabulary = self._predict_init()
+        self.index = hnswIndex(load=True, index_path=path(index_path))
 
     def _predict_init(self):
         # load vocabulary
-        vocabularyJson = json.load(open(vocabulary_path, "r"))
+        vocabularyJson = json.load(open(path(vocabulary_path), "r"))
         vec = CountVectorizer(vocabulary=vocabularyJson, decode_error='replace')
         print("vocabulary size " + str(len(vocabularyJson)))
         # load btm Model
-        btm = oBTM(num_topics=20, V=np.array(vec.get_feature_names()), theta_z_path=theta_z_path, phi_wz_path=phi_wz_path)
+        btm = oBTM(num_topics=20, V=np.array(vec.get_feature_names()), theta_z_path=path(theta_z_path), phi_wz_path=path(phi_wz_path))
         return btm, vec
 
     def predict(self, testData):

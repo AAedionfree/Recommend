@@ -7,7 +7,7 @@ from train import P_zd_path
 index_path = "save/hnsw.bin"
 
 class hnswIndex():
-    def __init__(self, load=False):
+    def __init__(self, load=False, index_path=""):
         if load == True:
             self.p = hnswlib.Index(space = 'l2', dim = 20)
             self.p.load_index(index_path)
