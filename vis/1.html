@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>搜索框制作</title>
+	<style>
+		*{padding:0px;margin:0px;}
+		ul,ol{list-style:none;}
+		.content{
+			width:500px;
+			margin:20px auto;
+		}
+		.searbox{
+			overflow:hidden;
+			position:relative;
+		}
+		.searbox .textBox{
+			width:300px;
+			height:40px;
+			border:1px solid #666;
+			float:left;
+			border-right:0px;
+		}
+		.searbox .searText{
+			width:280px;
+			height:38px;
+			border:0px;
+			outline: 0px;
+			padding-left:10px;
+		}
+		.searbox .searBtn{
+			float:left;
+			height:42px;
+			width:80px;
+			background:#4662d9;
+			color:#ffffff;
+			border:0px;
+			outline:none;
+			font-size:16px;
+			cursor:pointer;
+		}
+		.showList{
+			width:282px;
+			max-height:200px;
+			overflow:auto;
+			position:absolute;
+			box-shadow:0px 0px 3px #eaeaea;
+			padding:0 10px;
+		}
+		.showList li{
+			height:30px;
+			line-height:30px;
+			font-size:14px;
+		}
+	</style>
+</head>
+<body>
+	<div class="content">
+		<!-- 搜索框 -->
+		<div class="searbox">
+			<div class="textBox">
+				<input id="searText" class="searText" type="text">
+			</div>
+			<input id="searBtn" class="searBtn" type="button" value="搜 索">
+		</div>
+		<!-- 搜索信息回显，不需要可以删除 -->
+		<ul id="showList" class="showList"></ul>
+	</div>
+</body>
+	<script>
+		//主流浏览器数据搜索
+		var searText = document.getElementById("searText");//文本框
+		var searBtn = document.getElementById("searBtn");//搜索按钮
+		var showList = document.getElementById("showList");//回显数据盒子
+		var arrInfo = ["java语言","html+css","html5+css3","python","UI设计"];//搜索资源库
+		var arrLen = arrInfo.length;
+		var showData = [];
+
+		//搜索按钮点击事件
+		//判断搜索的数据是否存在，如果有后台可以去掉此部分
+		searBtn.onclick = function(){
+			//判断数据是否存在函数
+			isExist();
+			//渲染数据
+			renderDataFn();
+		}
+
+		//用户输入进行搜索
+		searText.addEventListener("input",function(){
+			//判断数据是否存在函数
+			isExist();
+			//渲染数据
+			renderDataFn();
+
+		}, false);
+
+
+		//回车搜索事件
+		searText.onkeydown = function(even){
+			var e = window.even || even;
+			if(e.keyCode == 13){
+				//判断数据是否存在函数
+				isExist();
+				//渲染数据
+				renderDataFn();
+			}
+		}
+
+		//判断数据是否存在函数
+		function isExist(){
+			showData = [];
+			var searVal = searText.value;
+			if(searVal.replace(/"\s"/g,"")){
+				for(var i=0;i<arrLen;i++){
+					if(arrInfo[i].indexOf(searVal)>-1 || arrInfo[i].toUpperCase().indexOf(searVal.toUpperCase())>-1){
+						showData.push(arrInfo[i]);
+					}
+				}
+			}else{
+				showList.innerHTML = "<li style='text-align:center;'>请输入搜索的内容！</li>"
+			}
+		}
+
+
+		//回显搜索的数据
+		function renderDataFn(){
+			var showDataLen = showData.length;
+			var strData = "";//拼接回显数据
+			if(showDataLen>0){
+				for(var i=0;i<showDataLen;i++){
+					strData += "<li>"+showData[i]+"</li>"
+				}
+			}else{
+				strData = "<li style='text-align:center;'>暂无搜索的信息！</li>"
+			}
+			showList.innerHTML = strData;
+		}
+	</script>
+</html>

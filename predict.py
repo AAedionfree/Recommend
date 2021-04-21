@@ -28,7 +28,7 @@ class doc2vecPredictor():
     def predict(self, testData, k):
         text = testData.split(' ')
         infer = self.model.infer_vector(doc_words=text, steps=500, alpha=0.005)
-        most_similar = self.model.docvecs.most_similar([infer], topn=k)
+        most_similar = self.model.dv.most_similar([infer], topn=k)
         return most_similar
 
 
@@ -53,7 +53,7 @@ class btmPredictor():
 
 
 if __name__ == '__main__':
-    Test = "doc2vec"
+    Test = "btm"
     testData = "生物 安全柜 实验室 全国"
     topk = 10
     if Test == "btm":
@@ -67,3 +67,4 @@ if __name__ == '__main__':
     if Test == "doc2vec":
         doc2vecPredictor = doc2vecPredictor()
         most_similar = doc2vecPredictor.predict(testData, topk)
+        print(most_similar)

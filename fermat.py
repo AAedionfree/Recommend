@@ -7,7 +7,7 @@ from train import P_zd_path
 index_path = "save/hnsw.bin"
 
 class hnswIndex():
-    def __init__(self, load=False, index_path=""):
+    def __init__(self, load=False, index_path="save/hnsw.bin"):
         if load == True:
             self.p = hnswlib.Index(space = 'l2', dim = 20)
             self.p.load_index(index_path)
@@ -22,7 +22,7 @@ class hnswIndex():
         # Declaring index
         p = hnswlib.Index(space = 'l2', dim = self.dim) # possible options are l2, cosine or ip
         # Initializing index - the maximum number of elements should be known beforehand
-        p.init_index(max_elements = self.num_elements, ef_construction = 200, M = 16)
+        p.init_index(max_elements = self.num_elements, ef_construction = 150000, M = 48)
 
         # Element insertion (can be called several times):
         p.add_items(self.data, self.data_labels)
