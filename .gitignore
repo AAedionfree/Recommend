@@ -9,3 +9,4 @@ data.csv
 *.npy
 *.log
 *.bin
+save/*
