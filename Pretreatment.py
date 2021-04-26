@@ -1,5 +1,5 @@
 #coding=utf-8
-from biddingInfo import biddingInfo
+from Info import biddingInfo, companyInfo
 from data import fileIndex
 
 import json
@@ -12,6 +12,9 @@ debug = False
 
 bidingDataPath = "data/bidding/"
 bidingDataFileName = fileIndex.bidingDataFileName
+
+companyDataPath = "data/company/"
+companyDataFileName = fileIndex.companyDataFileName
 
 stopWord = ["（", "）", "、", "，", ".", "。", "]", "[", "【", "】"]
 
@@ -116,8 +119,7 @@ def toBiddingInfo(filter_data, json_data, path):
                 Print("filter this sentence")
     return biddingInfos
 
-
-if __name__ == '__main__':
+def preBidding():
     columns = ["类别", "公司名称", "公司位置", "项目名字", "关键词", "文件路径", "下标位置"]
     for i in range(len(bidingDataFileName)):
         path = bidingDataPath + bidingDataFileName[i]
@@ -125,11 +127,44 @@ if __name__ == '__main__':
         filter_data, json_data = filter(data)
         biddingInfos = toBiddingInfo(filter_data, json_data, path)
         res = [info.toList() for info in biddingInfos]
-        df = pd.DataFrame(res, columns = columns)
+        df = pd.DataFrame(res, columns=columns)
         if i == 0:
             df.to_csv("data.csv", index=False, encoding='utf_8_sig', mode='a')
         else:
             df.to_csv("data.csv", index=False, encoding='utf_8_sig', mode='a', header=False)
-        print(str(i) + "/" + str(len(bidingDataFileName)) + " " + path + " " + "biddingInfos:" + str(len(biddingInfos)))
+        print(str(i+1) + "/" + str(len(bidingDataFileName)) + " " + path + " " + "biddingInfos:" + str(len(biddingInfos)))
     Print("\n预处理结束")
+
+def preCompany():
+    columns = ["公司名称", "经营范围", "公司类型", "公司位置", "文件路径", "下标位置"]
+    pattern = re.compile(r'[^\u4e00-\u9fa5]+')
+    for i in range(len(companyDataFileName)):
+        path = companyDataPath + companyDataFileName[i]
+        data = load_data(path)
+        companyInfos = []
+        for j, item in enumerate(data):
+            splits = item.split("^")
+            if len(splits) == 34:
+                companyRange =  " ".join(jieba.cut(re.sub(pattern, '', splits[13]))).strip()
+                if len(companyRange) >= 10:
+                    info = {}
+                    info['range'] = companyRange
+                    info['name'] = splits[2]
+                    info['class'] = splits[8]
+                    info['location'] = splits[9]
+                    info['path'] = companyDataFileName[i]
+                    info['index'] = j
+                    company_info = companyInfo.companyInfo(info)
+                    company_info.print_data(debug=True)
+                    companyInfos.append(company_info.toList())
+        df = pd.DataFrame(companyInfos, columns=columns)
+        if i == 0:
+            df.to_csv("companyData.csv", index=False, encoding='utf_8_sig', mode='a')
+        else:
+            df.to_csv("companyData.csv", index=False, encoding='utf_8_sig', mode='a', header=False)
+        print(str(i+1) + "/" + str(len(companyDataFileName)) + " " + path + " " + "companyInfos:" + str(len(companyInfos)))
+
+if __name__ == '__main__':
+    # preBidding()
+    preCompany()
 
