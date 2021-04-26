@@ -11,6 +11,7 @@ class oBTM:
             self.phi_wz = np.load(phi_wz_path)
             self.K = self.theta_z.shape[0]
             print(self.K)
+            print(self.phi_wz.shape)
         else:
             # init -> train -> save
             self.K = num_topics
@@ -72,13 +73,8 @@ class oBTM:
             for j, b in enumerate(d):
                 P_zbi = self.theta_z * self.phi_wz[b[0], :] * self.phi_wz[b[1], :]
                 P_zb[j] = P_zbi / P_zbi.sum()
-            if P_zb.sum(axis=0).sum() == 0:
-                print("index " + str(i))
-                print(P_zb.sum(axis=0))
-                print(self.theta_z)
-                print(self.phi_wz[b[0], :])
-                print(self.phi_wz[b[1], :])
-            P_zd[i] = P_zb.sum(axis=0) / P_zb.sum(axis=0).sum()
+            temp = P_zb.sum(axis=0)
+            P_zd[i] = temp /temp.sum()
         self.P_zd = P_zd
         return P_zd
 

@@ -1,13 +1,13 @@
 from train import train
-from predict import predict
+from predict import btmPredictor
 from fermat import hnswIndex
+
 
 def main():
     originText = train()
-    topic = predict()
+    predictor = btmPredictor()
+    topic = predictor.predict()
     index = hnswIndex()
-    index.construction_index()
-    index.save_index()
     labels, distances = index.query(topic, k=2)
     for i in range(len(labels)):
         print(originText[labels[i]])

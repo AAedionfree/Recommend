@@ -3,6 +3,9 @@ import json
 import pandas as pd
 import numpy as np
 import pyLDAvis
+import gensim
+from gensim.models import Doc2Vec
+
 from Biterm.btmModel import oBTM
 from sklearn.feature_extraction.text import CountVectorizer
 from Biterm.utility import vec_to_biterms, topic_summuary
@@ -11,14 +14,40 @@ vocabulary_path = "save/vocabulary.json"
 theta_z_path = "save/theta_z.npy"
 phi_wz_path = "save/phi_wz.npy"
 P_zd_path = "save/P_zd.npy"
-num_topics=20
+num_topics=40
 iterations=150
 
 def loadText(Path="./data.csv"):
     file = pd.read_csv(Path, nrows=200000)
     return np.array(file["关键词"])
 
-def train():
+def doc2vecLoadTrain():
+    texts = loadText()
+    X_train = []
+    TaggedDocument = gensim.models.doc2vec.TaggedDocument
+    for i, item in enumerate(texts):
+        word_list = item.split(' ')
+        for j, word in enumerate(word_list):
+            word_list[j] = word.strip()
+        document = TaggedDocument(word_list, tags=[i])
+        X_train.append(document)
+    return X_train
+
+def doc2vecTrain():
+    X_train = doc2vecLoadTrain()
+    doc2vec=Doc2Vec(X_train, min_count=30, alpha=0.001, window=3)
+    doc2vec.train(X_train, total_examples=doc2vec.corpus_count, epochs=100)
+    doc2vec.save("save/doc2vec.bin")
+    goal = "微机 安装 交换机 研究所 北京市"
+    # doc2vec = Doc2Vec.load("save/doc2vec.bin")
+    text = goal.split(' ')
+    infer = doc2vec.infer_vector(doc_words=text, steps=500, alpha=0.005)
+    most_similar = doc2vec.docvecs.most_similar([infer], topn=10)
+    for cnt,sen in most_similar:
+        print(cnt, sen)
+        print(X_train[cnt])
+
+def btmTrain():
     texts = loadText()
     min = 9999
     index = -1
@@ -28,10 +57,10 @@ def train():
             min = len(text.split(" "))
             index = i
     print("min is " + str(min))
-    vec = CountVectorizer(dtype=np.int16, token_pattern='\w+')
+    vec = CountVectorizer(dtype=np.uint8, token_pattern='\w+')
     X = vec.fit_transform(texts).toarray()
-    # json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
-
+    json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
+    print("vocabulary_ size is " + str(len(vec.vocabulary_)))
     vocab = np.array(vec.get_feature_names())
     biterms = vec_to_biterms(X)
 
@@ -59,7 +88,7 @@ def train():
     return texts
 
 if __name__=="__main__":
-    train()
+    btmTrain()
 
 
 
