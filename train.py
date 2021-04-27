@@ -17,13 +17,14 @@ P_zd_path = "save/P_zd.npy"
 doc2vec_Path = "save/doc2vec.bin"
 num_topics=20
 iterations=150
+cnt = 200000
 
-def loadText(Path="./data.csv"):
-    file = pd.read_csv(Path, nrows=100000)
-    return np.array(file["关键词"])
+def loadText(Path="./data.csv", keyword="关键词", n=200000):
+    file = pd.read_csv(Path, nrows=n)
+    return np.array(file[keyword])
 
-def doc2vecLoadTrain():
-    texts = loadText()
+def doc2vecLoadTrain(Path="./data.csv", keyword="关键词", n=200000):
+    texts = loadText(Path, keyword, n)
     X_train = []
     TaggedDocument = gensim.models.doc2vec.TaggedDocument
     for i, item in enumerate(texts):
@@ -34,8 +35,8 @@ def doc2vecLoadTrain():
         X_train.append(document)
     return X_train
 
-def doc2vecTrain():
-    X_train = doc2vecLoadTrain()
+def doc2vecTrain(Path="./data.csv", keyword="关键词", n=200000):
+    X_train = doc2vecLoadTrain(Path, keyword, n)
     doc2vec=Doc2Vec(X_train, min_count=10, alpha=0.001, window=3)
     doc2vec.train(X_train, total_examples=doc2vec.corpus_count, epochs=100)
     doc2vec.save(doc2vec_Path)
@@ -73,7 +74,7 @@ def btmTrain():
     return texts
 
 if __name__=="__main__":
-    doc2vecTrain()
+    doc2vecTrain("./companyData.csv", "经营范围", 41683983)
 
 
 
