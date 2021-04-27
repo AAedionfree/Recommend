@@ -14,8 +14,8 @@ vocabulary_path = "save/vocabulary.json"
 theta_z_path = "save/theta_z.npy"
 phi_wz_path = "save/phi_wz.npy"
 P_zd_path = "save/P_zd.npy"
+num_topics=40
 doc2vec_Path = "save/doc2vec.bin"
-num_topics=20
 iterations=150
 cnt = 200000
 
@@ -44,6 +44,14 @@ def doc2vecTrain(Path="./data.csv", keyword="关键词", n=200000):
 
 def btmTrain():
     texts = loadText()
+    min = 9999
+    index = -1
+    for i in range(len(texts)):
+        text = texts[i]
+        if min > len(text.split(" ")):
+            min = len(text.split(" "))
+            index = i
+    print("min is " + str(min))
     vec = CountVectorizer(dtype=np.uint8, token_pattern='\w+')
     X = vec.fit_transform(texts).toarray()
     json.dump(vec.vocabulary_, open(vocabulary_path, 'w'))
@@ -52,6 +60,7 @@ def btmTrain():
     biterms = vec_to_biterms(X)
 
     btm = oBTM(num_topics=num_topics, V=vocab)
+    print(len(vocab))
     print("\n\n Train Online BTM ..")
     for i in range(0, len(biterms), 100):  # prozess chunk of 200 texts
         biterms_chunk = biterms[i:i + 100]
@@ -69,7 +78,7 @@ def btmTrain():
     for i in range(len(texts)):
         print("{} (topic: {})".format(texts[i], topics[i].argmax()))
 
-    # btm.save(theta_z_path, phi_wz_path, P_zd_path)
+    btm.save(theta_z_path, phi_wz_path, P_zd_path)
 
     return texts
 

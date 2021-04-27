@@ -8,4 +8,5 @@ data.csv
 *.json
 *.npy
 *.log
+*.bin
 save/*
