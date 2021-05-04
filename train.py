@@ -15,7 +15,8 @@ theta_z_path = "save/theta_z.npy"
 phi_wz_path = "save/phi_wz.npy"
 P_zd_path = "save/P_zd.npy"
 num_topics=40
-doc2vec_Path = "save/doc2vec.bin"
+bidding_doc2vec_Path = "save/doc2vec.bin"
+company_doc2vec_path = "save/company/doc2vec.bin"
 iterations=150
 cnt = 200000
 

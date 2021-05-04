@@ -8,8 +8,8 @@ from Biterm.utility import vec_to_biterms, topic_summuary
 from gensim.models import Doc2Vec
 
 from train import phi_wz_path, vocabulary_path, theta_z_path
-from train import doc2vec_Path
 from fermat import hnswIndex, index_path
+from train import company_doc2vec_path, bidding_doc2vec_Path
 
 def path(file_path):
     current_path = os.path.abspath(__file__)
@@ -19,11 +19,12 @@ def path(file_path):
 
 
 class doc2vecPredictor():
-    def __init__(self):
+    def __init__(self, doc2vec_Path):
+        self.doc2vec_Path = path(doc2vec_Path)
         self.model = self.__predict__init()
 
     def __predict__init(self):
-        return Doc2Vec.load(path(doc2vec_Path))
+        return Doc2Vec.load(self.doc2vec_Path)
 
     def predict(self, testData, k):
         text = testData.split(' ')
@@ -53,8 +54,8 @@ class btmPredictor():
 
 
 if __name__ == '__main__':
-    Test = "btm"
-    testData = "生物 安全柜 实验室 全国"
+    Test = "doc2vec"
+    testData = "修缮 工程"
     topk = 10
     if Test == "btm":
         btmPredictor = btmPredictor()
@@ -65,6 +66,8 @@ if __name__ == '__main__':
         zd = np.load("save/P_zd.npy")
         print(zd[1])
     if Test == "doc2vec":
-        doc2vecPredictor = doc2vecPredictor()
+        doc2vecPredictor = doc2vecPredictor(bidding_doc2vec_Path)
         most_similar = doc2vecPredictor.predict(testData, topk)
-        print(most_similar)
+        for item in most_similar:
+            print(item[0])
+            print(item[1])
