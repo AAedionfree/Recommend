@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+</head>
+<body>
+    <h1></h1>
+        {% for bidding in res %}
+            <hr>
+            <p><strong>公司名称：</strong>{{bidding.demand}}</p>
+            <p><strong>营业范围：</strong>{{bidding.keywords}}</p>
+            {% if not loop.last %}
+            <hr>
+            {% endif %}
+        {% endfor %}
+    <h3></h3>
+</body>
+</html>

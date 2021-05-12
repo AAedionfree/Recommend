@@ -955,3 +955,37 @@ bidingDataFileName = [
     "t_model_2018_old_fv",
     "t_model_2018_old_fw"
 ]
+
+expDataFileName = [
+    "exp_aa",
+    "exp_ab",
+    "exp_ac",
+    "exp_ad",
+    "exp_ae",
+    "exp_af",
+    "exp_ag",
+    "exp_ah",
+    "exp_ai",
+    "exp_aj",
+    "exp_ak",
+    "exp_al",
+    "exp_am",
+    "exp_an",
+    "exp_ao",
+    "exp_ap",
+    "exp_aq",
+    "exp_ar",
+    "exp_as",
+    "exp_at",
+    "exp_au",
+    "exp_av",
+    "exp_aw",
+    "exp_ax",
+    "exp_ay",
+    "exp_az",
+    "exp_ba",
+    "exp_bb",
+    "exp_bc",
+    "exp_bd",
+    "exp_be"
+]

@@ -36,10 +36,10 @@ def doc2vecLoadTrain(Path="./data.csv", keyword="关键词", n=200000):
         X_train.append(document)
     return X_train
 
-def doc2vecTrain(Path="./data.csv", keyword="关键词", n=200000):
+def doc2vecTrain(doc2vec_Path, Path="./data.csv", keyword="关键词", n=200000):
     X_train = doc2vecLoadTrain(Path, keyword, n)
-    doc2vec=Doc2Vec(X_train, min_count=10, alpha=0.001, window=3)
-    doc2vec.train(X_train, total_examples=doc2vec.corpus_count, epochs=100)
+    doc2vec=Doc2Vec(X_train, min_count=10, alpha=0.001, window=5)
+    doc2vec.train(X_train, total_examples=doc2vec.corpus_count, epochs=200)
     doc2vec.save(doc2vec_Path)
 
 
@@ -84,7 +84,7 @@ def btmTrain():
     return texts
 
 if __name__=="__main__":
-    doc2vecTrain("./companyData.csv", "经营范围", 41683983)
+    doc2vecTrain(company_doc2vec_path, "./companyData.csv", "经营范围", 30083983)
 
 
 

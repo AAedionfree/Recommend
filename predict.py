@@ -28,7 +28,7 @@ class doc2vecPredictor():
 
     def predict(self, testData, k):
         text = testData.split(' ')
-        infer = self.model.infer_vector(doc_words=text, steps=500, alpha=0.005)
+        infer = self.model.infer_vector(doc_words=text, steps=1000, alpha=0.001)
         most_similar = self.model.dv.most_similar([infer], topn=k)
         return most_similar
 
